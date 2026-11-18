@@ -1,0 +1,18 @@
+{
+  "name": "phuc-an-retail-ai-agent",
+  "version": "1.0.0",
+  "description": "AI Agent Quản Trị & Đối Soát Bán Hàng 18 Cửa Hàng Phúc An Retail",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve ."
+  },
+  "keywords": [
+    "ai-agent",
+    "bpmn",
+    "retail",
+    "dashboard"
+  ],
+  "author": "Phuc An Retail",
+  "license": "MIT"
+}
+

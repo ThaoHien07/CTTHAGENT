@@ -1,0 +1,1407 @@
+ <!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dabang Dashboard - Phúc An Retail AI Management</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- SheetJS & PapaParse -->
+  <script src="xlsx.full.min.js"></script>
+  <script src="papaparse.min.js"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#FCEEF3] text-slate-800 min-h-screen flex antialiased">
+
+  <!-- Interactive Star Motion Canvas (Sparkle Particle Trail) -->
+  <canvas id="star-trail-canvas" class="fixed inset-0 pointer-events-none z-[9999]"></canvas>
+
+  <!-- ============================================== -->
+  <!-- WELCOME / ONBOARDING MODAL (My Melody Edition) -->
+  <!-- ============================================== -->
+  <div id="welcome-modal-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#FCEEF3]/90 backdrop-blur-md transition-all duration-500">
+    <div id="welcome-card" class="max-w-4xl w-full relative rounded-3xl shadow-2xl border-2 border-[#FAD2E1] overflow-hidden transform transition-all duration-500 scale-100 select-none bg-white">
+      
+      <!-- My Melody High Resolution Banner -->
+      <img src="welcome-card-mymelody.jpg" alt="Chào mừng bạn đến với web của Cao Thị Thảo Hiền" class="w-full h-auto block rounded-3xl shadow-xs">
+
+      <!-- Interactive Hotspot Button directly over 'Bắt đầu trải nghiệm' -->
+      <button id="btn-start-experience" 
+              class="absolute rounded-2xl cursor-pointer transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] group focus:outline-none"
+              style="left: 43.5%; top: 69.8%; width: 24.8%; height: 14.2%; background: transparent;"
+              title="Bắt đầu trải nghiệm ngay">
+        <span class="absolute inset-0 rounded-2xl bg-white/0 group-hover:bg-white/20 transition-colors duration-200"></span>
+      </button>
+
+      <!-- Close Button in corner -->
+      <button id="btn-close-welcome" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 hover:bg-white text-slate-500 hover:text-[#FF5B8E] flex items-center justify-center text-sm shadow-md transition-transform hover:scale-110 active:scale-90 z-20 cursor-pointer" title="Đóng và vào Bảng Điều Khiển">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- LEFT SIDEBAR (Dabang Exact White & Pink Style) -->
+  <!-- ============================================== -->
+  <aside class="w-64 bg-white hidden lg:flex flex-col justify-between p-6 shrink-0 border-r border-[#FAD2E1] shadow-xs select-none min-h-screen z-30">
+    <div>
+      <!-- Dabang Brand Logo -->
+      <div class="flex items-center gap-3.5 px-2 mb-8 cursor-pointer">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#FF5B8E] to-[#FA709A] text-white flex items-center justify-center font-black text-xl shadow-md shadow-pink-500/25">
+          <i class="fa-solid fa-infinity"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-extrabold text-[#1E293B] tracking-tight font-rounded">Dabang</span>
+          <span class="text-[10px] text-pink-600 font-bold uppercase tracking-wider">Phúc An Retail JSC</span>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="space-y-1.5">
+        <button id="nav-dashboard" class="dabang-nav-item active w-full">
+          <div class="w-5 flex justify-center text-base"><i class="fa-solid fa-chart-pie"></i></div>
+          <span id="txt-nav-dashboard">Bảng Điều Khiển</span>
+        </button>
+
+        <button id="nav-leaderboard" class="dabang-nav-item w-full">
+          <div class="w-5 flex justify-center text-base"><i class="fa-solid fa-chart-simple"></i></div>
+          <span id="txt-nav-leaderboard">Bảng Xếp Hạng</span>
+        </button>
+
+        <button id="nav-phase1" class="dabang-nav-item w-full">
+          <div class="w-5 flex justify-center text-base"><i class="fa-solid fa-cart-shopping"></i></div>
+          <span id="txt-nav-phase1">Đơn Hàng & Làm Sạch</span>
+        </button>
+
+        <button id="nav-products" class="dabang-nav-item w-full">
+          <div class="w-5 flex justify-center text-base"><i class="fa-solid fa-bag-shopping"></i></div>
+          <span id="txt-nav-products">Danh Mục Sản Phẩm</span>
+        </button>
+
+        <button id="nav-phase2" class="dabang-nav-item w-full">
+          <div class="w-5 flex justify-center text-base"><i class="fa-solid fa-chart-line"></i></div>
+          <span id="txt-nav-phase2">Báo Cáo Bán Hàng</span>
+        </button>
+
+        <button id="nav-phase3" class="dabang-nav-item w-full">
+          <div class="w-5 flex justify-center text-base"><i class="fa-solid fa-shield-halved"></i></div>
+          <span id="txt-nav-phase3">Đối Chiếu & Audit</span>
+        </button>
+
+        <button id="nav-messages" class="dabang-nav-item w-full">
+          <div class="w-5 flex justify-center text-base"><i class="fa-solid fa-comment-dots"></i></div>
+          <span id="txt-nav-messages">Trợ Lý AI Copilot</span>
+        </button>
+
+        <button id="nav-settings" class="dabang-nav-item w-full">
+          <div class="w-5 flex justify-center text-base"><i class="fa-solid fa-gear"></i></div>
+          <span id="txt-nav-settings">Cài Đặt Hệ Thống</span>
+        </button>
+
+        <button id="nav-signout" class="dabang-nav-item w-full">
+          <div class="w-5 flex justify-center text-base"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
+          <span id="txt-nav-signout">Đăng Xuất</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Bottom Promo Card: Dabang Pro (Pink Gradient) -->
+    <div class="rounded-3xl p-5 text-center text-white bg-gradient-to-b from-[#FF5B8E] via-[#FA6493] to-[#FA709A] shadow-lg shadow-pink-500/25 relative overflow-hidden mt-6">
+      <div class="w-10 h-10 mx-auto rounded-full bg-white/20 flex items-center justify-center mb-2.5 backdrop-blur-xs text-white text-base">
+        <i class="fa-solid fa-bolt"></i>
+      </div>
+      <h4 class="font-extrabold text-sm tracking-wide">Dabang Pro</h4>
+      <p id="txt-dabang-pro-sub" class="text-[11px] text-pink-100 mt-1 leading-snug">Hệ thống AI Agent BPMN 3.0 tự động hóa đối soát 60k dòng</p>
+      <button id="btn-export-data-side" class="mt-3.5 px-5 py-2 bg-white text-[#FF5B8E] font-extrabold text-xs rounded-full shadow-md hover:bg-pink-50 active:scale-95 transition-all">
+        <span id="txt-btn-get-pro">Nâng Cấp / Xuất CSV</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============================================== -->
+  <!-- MAIN APP CONTAINER -->
+  <!-- ============================================== -->
+  <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+
+    <!-- TOP HEADER (Dabang Exact Style) -->
+    <header class="px-6 md:px-10 py-5 flex items-center justify-between gap-4 sticky top-0 z-20 backdrop-blur-md bg-[#FCEEF3]/90">
+      <div class="flex items-center gap-4">
+        <!-- Mobile Menu Toggle -->
+        <button id="btn-mobile-menu" class="lg:hidden w-10 h-10 rounded-xl bg-white border border-[#FAD2E1] text-[#FF5B8E] flex items-center justify-center text-base">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h1 id="txt-header-title" class="text-2xl md:text-3xl font-extrabold text-[#1E293B] tracking-tight">Bảng Điều Khiển Quản Trị</h1>
+      </div>
+
+      <!-- Search Bar (Pill style matching reference screenshot) -->
+      <div class="flex-1 max-w-md hidden sm:block mx-4">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="search-global-input" placeholder="Tìm kiếm cửa hàng, giao dịch, ngành hàng..." class="w-full bg-white border border-[#FAD2E1] focus:border-[#FF5B8E] rounded-full pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none shadow-xs transition">
+        </div>
+      </div>
+
+      <!-- Right Profile Controls -->
+      <div class="flex items-center gap-3">
+        <!-- Language Selector Dropdown -->
+        <div class="relative hidden md:block" id="lang-dropdown-wrapper">
+          <button type="button" id="btn-lang-toggle" class="flex items-center gap-2 bg-white hover:bg-[#FFF0F5] border border-[#FAD2E1] rounded-2xl px-3 py-2 text-xs font-bold text-slate-700 cursor-pointer shadow-xs transition">
+            <img id="current-lang-flag" src="https://flagcdn.com/w20/vn.png" alt="VN Flag" class="w-4 h-3 rounded-xs object-cover">
+            <span id="current-lang-text">Tiếng Việt</span>
+            <i id="current-lang-chevron" class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform"></i>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div id="lang-menu" class="absolute right-0 mt-1.5 w-36 bg-white border border-[#FAD2E1] rounded-2xl shadow-xl py-1.5 z-50 hidden">
+            <button type="button" class="lang-option w-full px-3 py-2 text-left text-xs font-bold flex items-center gap-2 hover:bg-[#FFF0F5] hover:text-[#FF5B8E] transition text-slate-800" data-lang="vi" data-flag="https://flagcdn.com/w20/vn.png" data-name="Tiếng Việt">
+              <img src="https://flagcdn.com/w20/vn.png" alt="VN Flag" class="w-4 h-3 rounded-xs object-cover">
+              <span>Tiếng Việt</span>
+              <i class="fa-solid fa-check text-[10px] text-[#FF5B8E] ml-auto check-icon"></i>
+            </button>
+            <button type="button" class="lang-option w-full px-3 py-2 text-left text-xs font-semibold flex items-center gap-2 hover:bg-[#FFF0F5] hover:text-[#FF5B8E] transition text-slate-700" data-lang="en" data-flag="https://flagcdn.com/w20/us.png" data-name="Eng (US)">
+              <img src="https://flagcdn.com/w20/us.png" alt="US Flag" class="w-4 h-3 rounded-xs object-cover">
+              <span>Eng (US)</span>
+              <i class="fa-solid fa-check text-[10px] text-[#FF5B8E] ml-auto hidden check-icon"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dark / Light Mode Toggle Button -->
+        <button type="button" id="btn-theme-toggle" class="relative w-10 h-10 rounded-2xl bg-white border border-[#FAD2E1] text-slate-600 hover:text-[#FF5B8E] flex items-center justify-center text-sm shadow-xs transition hover:scale-105 active:scale-95 cursor-pointer" title="Chuyển chế độ Sáng / Tối (Light / Dark Mode)">
+          <i id="theme-toggle-icon" class="fa-solid fa-moon text-slate-600 transition-transform"></i>
+        </button>
+
+        <!-- Notification Bell with Pink Dot -->
+        <button class="relative w-10 h-10 rounded-2xl bg-white border border-[#FAD2E1] text-slate-600 hover:text-[#FF5B8E] flex items-center justify-center text-sm shadow-xs transition">
+          <i class="fa-regular fa-bell"></i>
+          <span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-[#FF5B8E]"></span>
+        </button>
+
+        <!-- Admin Profile Pill: Cao Thị Thảo Hiền (Opens Welcome Modal) -->
+        <button type="button" id="btn-open-welcome-profile" class="flex items-center gap-2.5 bg-white hover:bg-[#FFF0F5] border border-[#FAD2E1] rounded-2xl p-1.5 pr-3 shadow-xs cursor-pointer transition" title="Xem thông tin Cao Thị Thảo Hiền & Trợ lý AI">
+          <img src="avatar-thao-hien.png?v=2" alt="Avatar Cao Thị Thảo Hiền" class="w-8 h-8 rounded-xl object-cover">
+          <div class="text-left hidden sm:block">
+            <span class="text-xs font-bold text-slate-800 block leading-tight">Cao Thị Thảo Hiền</span>
+            <span class="text-[9px] text-[#FF2D78] font-bold uppercase tracking-wider block">Data Analyst & BI 💖</span>
+          </div>
+          <i class="fa-solid fa-sparkles text-[10px] text-[#FF2D78] ml-1"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN SCROLLABLE CONTENT -->
+    <main class="flex-1 px-6 md:px-10 pb-12 space-y-6">
+
+      <!-- ============================================== -->
+      <!-- TOP AGENT WORKFLOW HEADER (Matching Image)     -->
+      <!-- ============================================== -->
+      <div class="rounded-2xl bg-[#0F1E36] text-white p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-lg border border-slate-700">
+        <div class="flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#3B82F6] to-[#06B6D4] text-white flex items-center justify-center text-lg shadow-md shrink-0">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-base sm:text-lg font-black tracking-tight">Enterprise BI AI Agent</h2>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-400/30">
+                AI & Human-in-the-Loop
+              </span>
+            </div>
+            <p class="text-xs text-slate-300 mt-0.5">
+              Hệ thống Phân tích Bối cảnh, Chuẩn hóa, Làm sạch Dữ liệu & Khởi tạo Dashboard Tự động
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 self-end md:self-auto">
+          <button type="button" id="btn-new-session" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-xl border border-white/20 transition flex items-center gap-2 shadow-xs cursor-pointer active:scale-95">
+            <i class="fa-solid fa-rotate-right text-xs"></i>
+            <span>Phiên làm việc mới (Làm trống)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- 4-STEP STEPPER BAR (Matching Reference Image)  -->
+      <!-- ============================================== -->
+      <div class="dabang-card p-3 sm:p-4 bg-white shadow-xs border border-[#FAD2E1]">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-center">
+          
+          <!-- Step 1 Tab -->
+          <button type="button" id="step-nav-1" class="step-card active text-left flex items-center gap-3 p-3 rounded-2xl border-2 border-[#FF5B8E] bg-[#FFF0F5] transition cursor-pointer">
+            <div class="step-circle w-8 h-8 rounded-full bg-[#FF5B8E] text-white font-black text-xs flex items-center justify-center shrink-0">
+              1
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[11px] font-black text-slate-900 truncate">BƯỚC 1: BỐI CẢNH & ĐỊNH D...</div>
+              <div class="text-[10px] text-slate-500 truncate">Nhận dữ liệu • Kiểm tra đúng/sai...</div>
+            </div>
+            <span id="badge-step-1" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#FFE2E5] text-[#FA5A7D] shrink-0">
+              Đang thực hiện
+            </span>
+          </button>
+
+          <!-- Step 2 Tab -->
+          <button type="button" id="step-nav-2" class="step-card text-left flex items-center gap-3 p-3 rounded-2xl border border-slate-200 bg-white transition cursor-pointer">
+            <div class="step-circle w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-black text-xs flex items-center justify-center shrink-0">
+              2
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[11px] font-black text-slate-900 truncate">BƯỚC 2: LÀM SẠCH & XÁC NHẬN</div>
+              <div class="text-[10px] text-slate-500 truncate">Phát hiện lỗi • Sửa thủ công / AI</div>
+            </div>
+            <span id="badge-step-2" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 shrink-0">
+              Chờ
+            </span>
+          </button>
+
+          <!-- Step 3 Tab -->
+          <button type="button" id="step-nav-3" class="step-card text-left flex items-center gap-3 p-3 rounded-2xl border border-slate-200 bg-white transition cursor-pointer">
+            <div class="step-circle w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-black text-xs flex items-center justify-center shrink-0">
+              3
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[11px] font-black text-slate-900 truncate">BƯỚC 3: PHÂN TÍCH & FEEDBACK</div>
+              <div class="text-[10px] text-slate-500 truncate">AI đánh giá BI • Xác nhận Feedback</div>
+            </div>
+            <span id="badge-step-3" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 shrink-0">
+              Chờ
+            </span>
+          </button>
+
+          <!-- Step 4 Tab -->
+          <button type="button" id="step-nav-4" class="step-card text-left flex items-center gap-3 p-3 rounded-2xl border border-slate-200 bg-white transition cursor-pointer">
+            <div class="step-circle w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-black text-xs flex items-center justify-center shrink-0">
+              4
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-[11px] font-black text-slate-900 truncate">BƯỚC 4: BÁO CÁO & DASHBOARD</div>
+              <div class="text-[10px] text-slate-500 truncate">Xuất bản BI Dashboard & Report</div>
+            </div>
+            <span id="badge-step-4" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 shrink-0">
+              Chờ
+            </span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- STEP 1 CONTENT: BỐI CẢNH (1A) + DỮ LIỆU ĐẦU VÀO(1B) -->
+      <!-- ============================================== -->
+      <section id="step1-main-section" class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+        
+        <!-- BƯỚC 1A: Bối cảnh Doanh nghiệp (Business Context) -->
+        <div class="dabang-card p-6 flex flex-col justify-between space-y-4 border border-[#FAD2E1] bg-white">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="px-2.5 py-1 text-xs font-black bg-[#2563EB] text-white rounded-lg uppercase tracking-wider">
+                BƯỚC 1A
+              </span>
+              <h3 class="text-base font-black text-slate-900">Bối cảnh Doanh nghiệp (Business Context)</h3>
+            </div>
+            <p class="text-xs text-slate-500">Nhập thông tin bối cảnh để AI phân tích sát thực tế</p>
+          </div>
+
+          <div class="space-y-3.5 flex-1">
+            <!-- Row 1: Tên doanh nghiệp & Ngành nghề -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Tên Doanh nghiệp / Dự án</label>
+                <input type="text" id="ctx-company-name" placeholder="Nhập tên công ty hoặc dự án của bạn.." class="w-full bg-[#FFFBFD] border border-[#FAD2E1] rounded-xl px-3 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#FF5B8E] focus:ring-1 focus:ring-[#FF5B8E] transition">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Ngành nghề / Lĩnh vực hoạt động</label>
+                <input type="text" id="ctx-industry" placeholder="Chọn hoặc tự nhập ngành nghề kinh.." class="w-full bg-[#FFFBFD] border border-[#FAD2E1] rounded-xl px-3 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#FF5B8E] focus:ring-1 focus:ring-[#FF5B8E] transition">
+              </div>
+            </div>
+
+            <!-- Row 2: Đối tượng xem Báo cáo / Dashboard -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Đối tượng xem Báo cáo / Dashboard</label>
+              <input type="text" id="ctx-audience" placeholder="VD: Ban Giám đốc (CEO / CFO), Trưởng phòng Kinh doanh..." class="w-full bg-[#FFFBFD] border border-[#FAD2E1] rounded-xl px-3 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#FF5B8E] focus:ring-1 focus:ring-[#FF5B8E] transition">
+            </div>
+
+            <!-- Row 3: Bối cảnh & Mục tiêu Phân tích Số liệu -->
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-xs font-bold text-slate-700">Bối cảnh & Mục tiêu Phân tích Số liệu</label>
+                <button type="button" id="btn-context-preset" class="text-[11px] text-[#FF5B8E] hover:underline font-bold flex items-center gap-1 cursor-pointer">
+                  <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i> Mẫu gợi ý bán lẻ
+                </button>
+              </div>
+              <textarea id="ctx-description" rows="4" placeholder="Mô tả bối cảnh hiện tại của doanh nghiệp và mục tiêu phân tích (VD: Phân tích doanh thu, chi phí, công nợ, dòng tiền hoặc hiệu suất bán hàng...)" class="w-full bg-[#FFFBFD] border border-[#FAD2E1] rounded-xl p-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#FF5B8E] focus:ring-1 focus:ring-[#FF5B8E] transition resize-none"></textarea>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <span>AI Agent sẽ bám sát tiêu chí an toàn & bối cảnh này</span>
+            <button type="button" id="btn-context-clear" class="text-slate-400 hover:text-slate-600 font-medium cursor-pointer">Làm trống ô</button>
+          </div>
+        </div>
+
+        <!-- BƯỚC 1B: Dữ liệu Đầu vào (Raw Data Input) -->
+        <div class="dabang-card p-6 flex flex-col justify-between space-y-4 border border-[#FAD2E1] bg-white">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2.5 py-1 text-xs font-black bg-[#2563EB] text-white rounded-lg uppercase tracking-wider">
+                  BƯỚC 1B
+                </span>
+                <h3 class="text-base font-black text-slate-900">Dữ liệu Đầu vào (Raw Data Input)</h3>
+              </div>
+              <p class="text-xs text-slate-500">Nhập hoặc dán dữ liệu của bạn vào bên dưới (CSV, Bảng copy từ Excel, JSON hoặc văn bản số liệu)</p>
+            </div>
+
+            <!-- Upload File Trigger Label (Native HTML for maximum browser reliability) -->
+            <div>
+              <label for="file-sheets-input" id="btn-upload-file-trigger" class="px-3 py-2 bg-[#FFF0F5] hover:bg-[#FFE4EC] text-[#FF5B8E] border border-[#FAD2E1] font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer shrink-0 select-none">
+                <i class="fa-solid fa-folder-open text-amber-500"></i>
+                <span>Tải file lên (CSV / Excel / JSON)</span>
+              </label>
+              <input type="file" id="file-sheets-input" accept=".xlsx, .xls, .csv, .json" class="sr-only">
+            </div>
+          </div>
+
+          <!-- Raw Data Input Textarea -->
+          <div class="flex-1 flex flex-col">
+            <textarea id="raw-data-paste-input" rows="8" placeholder="Dán dữ liệu của bạn vào đây hoặc bấm 'Tải file lên (CSV / Excel / JSON)' ở góc phải..." class="w-full flex-1 bg-[#FFFBFD] border border-[#FAD2E1] rounded-2xl p-3 text-xs text-slate-800 placeholder-slate-400 font-mono focus:outline-none focus:border-[#FF5B8E] focus:ring-1 focus:ring-[#FF5B8E] transition resize-none"></textarea>
+          </div>
+
+          <!-- Action Bar: Status Hint + Analyze CTA Button -->
+          <div class="pt-2 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div id="input-status-hint" class="text-xs text-slate-400 italic">
+              Chưa có dữ liệu. Hãy tải file hoặc dán dữ liệu để bắt đầu.
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="button" id="btn-load-sample-quick" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer">
+                Nạp 60k Dòng Mẫu
+              </button>
+              <button type="button" id="btn-analyze-context-data" class="btn-dabang-primary px-5 py-2.5 text-xs font-black flex items-center gap-2 shadow-md hover:scale-[1.02] active:scale-[0.98] transition cursor-pointer">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Phân Tích Bối Cảnh & Kiểm Tra Định Dạng</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SUBSEQUENT STEPS CONTAINER (REVEALED AFTER DATA INPUT)   -->
+      <!-- ======================================================== -->
+      <div id="subsequent-steps-container" class="space-y-6 hidden transition-all duration-700">
+
+      <!-- ============================================== -->
+      <!-- DABANG 3-ROW ANALYTICS GRID (Exact Layout)     -->
+      <!-- ============================================== -->
+      
+      <!-- ROW 1: Today's Sales (60%) + Visitor Insights (40%) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: Today's Sales Card -->
+        <div class="lg:col-span-7 dabang-card p-6 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-4">
+            <div>
+              <h3 id="txt-todays-sales-title" class="text-base font-extrabold text-[#1E293B]">Doanh Số & Giao Dịch</h3>
+              <p id="txt-todays-sales-sub" class="text-xs text-slate-400 mt-0.5">Tổng quan bán hàng (Hệ thống sẵn sàng tiếp nhận tệp dữ liệu khách hàng)</p>
+            </div>
+            <button id="btn-export-data" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-[#FAD2E1] hover:border-[#FF5B8E] text-slate-600 hover:text-[#FF5B8E] text-xs font-bold rounded-xl shadow-xs transition">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i> <span id="txt-btn-export">Xuất Dữ Liệu</span>
+            </button>
+          </div>
+
+          <!-- 4 Pastel Colored Mini Cards (Exact Dabang Style) -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-2">
+            
+            <!-- 1. Red/Pink Card: 0 Dữ Liệu Sạch -->
+            <div class="rounded-2xl p-4 bg-[#FFE2E5] flex flex-col justify-between transition hover:-translate-y-1">
+              <div class="w-9 h-9 rounded-full bg-[#FA5A7D] text-white flex items-center justify-center text-xs shadow-xs mb-2.5">
+                <i class="fa-solid fa-chart-simple"></i>
+              </div>
+              <div>
+                <div class="text-xl font-black text-[#1E293B]" id="stat-clean-rows">0</div>
+                <div id="txt-lbl-clean" class="text-xs font-bold text-slate-700 mt-0.5">Đơn Sạch Hợp Lệ</div>
+                <div class="text-[10px] text-[#FA5A7D] font-bold mt-1">Chờ nạp tệp</div>
+              </div>
+            </div>
+
+            <!-- 2. Light Orange Card: 0 Đếm Trùng -->
+            <div class="rounded-2xl p-4 bg-[#FFF4DE] flex flex-col justify-between transition hover:-translate-y-1">
+              <div class="w-9 h-9 rounded-full bg-[#FF947A] text-white flex items-center justify-center text-xs shadow-xs mb-2.5">
+                <i class="fa-solid fa-file-lines"></i>
+              </div>
+              <div>
+                <div class="text-xl font-black text-[#1E293B]" id="stat-duplicate-rows">0</div>
+                <div id="txt-lbl-dup" class="text-xs font-bold text-slate-700 mt-0.5">Đơn Trùng Lặp</div>
+                <div class="text-[10px] text-[#FF947A] font-bold mt-1">Chờ nạp tệp</div>
+              </div>
+            </div>
+
+            <!-- 3. Mint Green Card: 0 Đơn Hủy -->
+            <div class="rounded-2xl p-4 bg-[#DCFCE7] flex flex-col justify-between transition hover:-translate-y-1">
+              <div class="w-9 h-9 rounded-full bg-[#3CD856] text-white flex items-center justify-center text-xs shadow-xs mb-2.5">
+                <i class="fa-solid fa-tag"></i>
+              </div>
+              <div>
+                <div class="text-xl font-black text-[#1E293B]" id="stat-cancelled-rows">0</div>
+                <div id="txt-lbl-cancel" class="text-xs font-bold text-slate-700 mt-0.5">Đơn Đã Hủy</div>
+                <div class="text-[10px] text-[#3CD856] font-bold mt-1">Chờ nạp tệp</div>
+              </div>
+            </div>
+
+            <!-- 4. Soft Purple Card: 0 Đổi Trả -->
+            <div class="rounded-2xl p-4 bg-[#F3E8FF] flex flex-col justify-between transition hover:-translate-y-1">
+              <div class="w-9 h-9 rounded-full bg-[#BF83FF] text-white flex items-center justify-center text-xs shadow-xs mb-2.5">
+                <i class="fa-solid fa-user-plus"></i>
+              </div>
+              <div>
+                <div class="text-xl font-black text-[#1E293B]" id="stat-return-rows">0</div>
+                <div id="txt-lbl-return" class="text-xs font-bold text-slate-700 mt-0.5">Đơn Đổi Trả</div>
+                <div class="text-[10px] text-[#BF83FF] font-bold mt-1">Chờ nạp tệp</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Visitor Insights Card -->
+        <div class="lg:col-span-5 dabang-card p-6 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-2">
+            <h3 id="txt-visitor-insights-title" class="text-base font-extrabold text-[#1E293B]">Thông Tin Lượng Khách</h3>
+            <span id="txt-visitor-insights-sub" class="text-xs text-slate-400 font-medium">Xu Hướng Toàn Chuỗi</span>
+          </div>
+
+          <!-- Triple curved line chart canvas -->
+          <div class="h-44 w-full relative">
+            <canvas id="chart-visitor-insights"></canvas>
+          </div>
+
+          <!-- Chart Legend Pills -->
+          <div class="flex items-center justify-center gap-4 pt-3 text-[11px] font-bold text-slate-600">
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-[#9333EA]"></span> <span id="txt-loyal-cust">Khách Thân Thiết</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-[#FF5B8E]"></span> <span id="txt-new-cust">Khách Mới</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-[#10B981]"></span> <span id="txt-unique-cust">Khách Độc Nhất</span></div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- ROW 2: Total Revenue (33%) + Customer Satisfaction (33%) + Target vs Reality (33%) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- 1. Total Revenue -->
+        <div class="dabang-card p-6 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-3">
+            <h3 id="txt-total-rev-title" class="text-base font-extrabold text-[#1E293B]">Tổng Doanh Thu</h3>
+            <span id="summary-total-rev-header" class="text-xs text-slate-400 font-semibold">0 VNĐ</span>
+          </div>
+          <div class="h-48 w-full">
+            <canvas id="chart-total-revenue"></canvas>
+          </div>
+          <div class="flex items-center justify-center gap-5 pt-3 text-[11px] font-bold text-slate-600">
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#FF5B8E]"></span> <span id="txt-online-sales">Bán Trực Tuyến</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#8B5CF6]"></span> <span id="txt-offline-sales">Bán Tại Cửa Hàng</span></div>
+          </div>
+        </div>
+
+        <!-- 2. Customer Satisfaction -->
+        <div class="dabang-card p-6 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-3">
+            <h3 id="txt-cust-sat-title" class="text-base font-extrabold text-[#1E293B]">Độ Hài Lòng Khách Hàng</h3>
+            <span class="text-xs text-slate-400 font-semibold">Chờ dữ liệu</span>
+          </div>
+          <div class="h-48 w-full">
+            <canvas id="chart-customer-satisfaction"></canvas>
+          </div>
+          <div class="flex items-center justify-around pt-3 border-t border-[#FAD2E1] text-[11px]">
+            <div class="text-center">
+              <span class="text-slate-400 flex items-center justify-center gap-1"><span class="w-2 h-2 rounded-full bg-[#FF5B8E]"></span> <span id="txt-last-month">Tháng Trước</span></span>
+              <div class="font-extrabold text-slate-800 text-xs mt-0.5">0</div>
+            </div>
+            <div class="text-center">
+              <span class="text-slate-400 flex items-center justify-center gap-1"><span class="w-2 h-2 rounded-full bg-[#8B5CF6]"></span> <span id="txt-this-month">Tháng Này</span></span>
+              <div class="font-extrabold text-slate-800 text-xs mt-0.5">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Target vs Reality -->
+        <div class="dabang-card p-6 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-3">
+            <h3 id="txt-target-reality-title" class="text-base font-extrabold text-[#1E293B]">Mục Tiêu vs Thực Tế</h3>
+            <span id="summary-target-reality-badge" class="text-xs text-slate-500 font-bold bg-slate-100 px-2 py-0.5 rounded-full">Chờ dữ liệu</span>
+          </div>
+          <div class="h-48 w-full">
+            <canvas id="chart-target-reality"></canvas>
+          </div>
+          <div class="space-y-1.5 pt-2 text-xs">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-xl bg-[#FFE2E5] text-[#FA5A7D] flex items-center justify-center text-xs"><i class="fa-solid fa-bag-shopping"></i></div>
+                <div>
+                  <div id="txt-reality-sales-lbl" class="font-bold text-slate-800 text-xs">Doanh Số Thực Tế</div>
+                  <div id="txt-reality-sub" class="text-[10px] text-slate-400">Thực tế</div>
+                </div>
+              </div>
+              <div class="font-extrabold text-slate-800 text-xs" id="stat-reality-sales">0 B <span class="text-slate-400 font-normal">(0)</span></div>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-xl bg-[#FFF4DE] text-[#FF947A] flex items-center justify-center text-xs"><i class="fa-solid fa-ticket"></i></div>
+                <div>
+                  <div id="txt-target-sales-lbl" class="font-bold text-slate-800 text-xs">Doanh Số Mục Tiêu</div>
+                  <div id="txt-target-sub" class="text-[10px] text-slate-400">Kế hoạch</div>
+                </div>
+              </div>
+              <div class="font-extrabold text-slate-800 text-xs" id="stat-target-sales">0 B <span class="text-slate-400 font-normal">(0)</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- ROW 3: Top Products (33%) + Sales Mapping by Region (33%) + Volume vs Service Level (33%) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- 1. Top Products Table -->
+        <div class="dabang-card p-6 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-4">
+            <h3 id="txt-top-prod-title" class="text-base font-extrabold text-[#1E293B]">Top Ngành Hàng</h3>
+            <span id="txt-top-prod-sub" class="text-xs text-slate-400 font-medium">4 Ngành Hàng Toàn Chuỗi</span>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Table Header -->
+            <div class="grid grid-cols-12 text-[11px] font-bold text-slate-400 border-b border-slate-100 pb-2">
+              <div id="txt-th-num" class="col-span-1">#</div>
+              <div id="txt-th-name" class="col-span-5">Ngành Hàng</div>
+              <div id="txt-th-pop" class="col-span-4">Tỷ Trọng Doanh Số</div>
+              <div id="txt-th-sales" class="col-span-2 text-right">Đóng Góp</div>
+            </div>
+
+            <!-- Product 01 -->
+            <div class="grid grid-cols-12 items-center text-xs">
+              <div class="col-span-1 text-slate-400 font-bold">01</div>
+              <div id="txt-cat-01" class="col-span-5 font-bold text-slate-800 truncate pr-1" title="Điện gia dụng (CAT01)">Điện Gia Dụng (CAT01)</div>
+              <div class="col-span-4 pr-3">
+                <div class="w-full bg-[#FFE2E5] rounded-full h-1.5 overflow-hidden">
+                  <div id="prog-cat-01" class="bg-[#FF5B8E] h-1.5 rounded-full" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="col-span-2 text-right">
+                <span id="badge-cat-01" class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-[#FFE2E5] text-[#FA5A7D] border border-[#FFCCD3]">0%</span>
+              </div>
+            </div>
+
+            <!-- Product 02 -->
+            <div class="grid grid-cols-12 items-center text-xs">
+              <div class="col-span-1 text-slate-400 font-bold">02</div>
+              <div id="txt-cat-02" class="col-span-5 font-bold text-slate-800 truncate pr-1" title="Thiết bị số (CAT02)">Thiết Bị Số (CAT02)</div>
+              <div class="col-span-4 pr-3">
+                <div class="w-full bg-[#F3E8FF] rounded-full h-1.5 overflow-hidden">
+                  <div id="prog-cat-02" class="bg-[#BF83FF] h-1.5 rounded-full" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="col-span-2 text-right">
+                <span id="badge-cat-02" class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-[#F3E8FF] text-[#BF83FF] border border-[#E9D5FF]">0%</span>
+              </div>
+            </div>
+
+            <!-- Product 03 -->
+            <div class="grid grid-cols-12 items-center text-xs">
+              <div class="col-span-1 text-slate-400 font-bold">03</div>
+              <div id="txt-cat-03" class="col-span-5 font-bold text-slate-800 truncate pr-1" title="Sức khỏe & Làm đẹp (CAT03)">Sức Khỏe & Sắc Đẹp (CAT03)</div>
+              <div class="col-span-4 pr-3">
+                <div class="w-full bg-[#DCFCE7] rounded-full h-1.5 overflow-hidden">
+                  <div id="prog-cat-03" class="bg-[#3CD856] h-1.5 rounded-full" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="col-span-2 text-right">
+                <span id="badge-cat-03" class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0]">0%</span>
+              </div>
+            </div>
+
+            <!-- Product 04 -->
+            <div class="grid grid-cols-12 items-center text-xs">
+              <div class="col-span-1 text-slate-400 font-bold">04</div>
+              <div id="txt-cat-04" class="col-span-5 font-bold text-slate-800 truncate pr-1" title="Gia dụng thông minh (CAT04)">Gia Dụng Thông Minh (CAT04)</div>
+              <div class="col-span-4 pr-3">
+                <div class="w-full bg-[#FFF4DE] rounded-full h-1.5 overflow-hidden">
+                  <div id="prog-cat-04" class="bg-[#FF947A] h-1.5 rounded-full" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="col-span-2 text-right">
+                <span id="badge-cat-04" class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-[#FFF4DE] text-[#D97706] border border-[#FDE68A]">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Sales Mapping by Region -->
+        <div class="dabang-card p-6 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-2">
+            <h3 id="txt-sales-map-title" class="text-base font-extrabold text-[#1E293B]">Phân Bổ Doanh Số Khu Vực</h3>
+            <span class="text-xs text-slate-400 font-medium">18 Điểm Bán</span>
+          </div>
+
+          <!-- Aesthetic Region Graphic matching Dabang Country Map -->
+          <div class="relative py-3 flex items-center justify-center">
+            <svg viewBox="0 0 320 160" class="w-full h-36">
+              <!-- Background abstract continents in soft pink and purple tones -->
+              <path d="M 20 40 Q 50 10 90 35 Q 120 20 140 50 Q 110 90 60 80 Q 20 70 20 40 Z" fill="#FFA5BA" opacity="0.8" />
+              <path d="M 40 90 Q 70 85 85 115 Q 70 150 45 140 Q 25 120 40 90 Z" fill="#F472B6" opacity="0.7" />
+              <path d="M 160 30 Q 200 15 240 30 Q 280 20 300 45 Q 310 80 270 75 Q 220 70 170 55 Z" fill="#C084FC" opacity="0.8" />
+              <path d="M 180 85 Q 210 75 220 95 Q 200 130 180 110 Z" fill="#34D399" opacity="0.85" />
+              <path d="M 230 90 Q 270 85 285 110 Q 260 135 235 115 Z" fill="#60A5FA" opacity="0.8" />
+              <path d="M 260 120 Q 290 115 305 135 Q 280 155 255 140 Z" fill="#FBBF24" opacity="0.85" />
+
+              <!-- Hotspot pulses -->
+              <circle cx="85" cy="55" r="4" fill="#FF5B8E" />
+              <circle cx="85" cy="55" r="8" fill="#FF5B8E" opacity="0.3" class="animate-ping" />
+
+              <circle cx="210" cy="90" r="4" fill="#10B981" />
+              <circle cx="210" cy="90" r="8" fill="#10B981" opacity="0.3" class="animate-ping" />
+
+              <circle cx="260" cy="50" r="4" fill="#9333EA" />
+              <circle cx="260" cy="50" r="8" fill="#9333EA" opacity="0.3" class="animate-ping" />
+            </svg>
+          </div>
+
+          <!-- Region Pills -->
+          <div class="flex flex-wrap items-center justify-between text-[10px] font-bold text-slate-600 gap-1 pt-2 border-t border-slate-100">
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#FF5B8E]"></span> Hà Nội (6 CH)</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#9333EA]"></span> TP.HCM (5 CH)</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#10B981]"></span> Miền Bắc (3 CH)</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#3B82F6]"></span> Miền Trung (2 CH)</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#F59E0B]"></span> Miền Tây (2 CH)</span>
+          </div>
+        </div>
+
+        <!-- 3. Volume vs Service Level -->
+        <div class="dabang-card p-6 flex flex-col justify-between">
+          <div class="flex items-center justify-between pb-3">
+            <h3 id="txt-vol-service-title" class="text-base font-extrabold text-[#1E293B]">Sản Lượng vs Mức Dịch Vụ</h3>
+            <span class="text-xs text-slate-400 font-semibold">Tỷ Lệ Đổi Trả 4.2%</span>
+          </div>
+          <div class="h-44 w-full">
+            <canvas id="chart-volume-service"></canvas>
+          </div>
+          <div class="flex items-center justify-center gap-6 pt-3 text-[11px] font-bold text-slate-600">
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#FF5B8E]"></span> <span id="txt-vol-lbl">Sản Lượng</span> <span class="font-normal text-slate-400">0.5k</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#9333EA]"></span> <span id="txt-serv-lbl">Dịch Vụ</span> <span class="font-normal text-slate-400">0.8k</span></div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- ============================================== -->
+      <!-- BPMN GOVERNANCE & OPERATIONAL WORKSPACE SECTION -->
+      <!-- ============================================== -->
+      <section class="dabang-card p-6 md:p-8 space-y-6 border-2 border-[#FAD2E1] bg-white">
+        
+        <!-- Section Header with BPMN Tabs -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#FAD2E1]">
+          <div>
+            <div class="flex items-center gap-2.5">
+              <span class="px-2.5 py-1 text-xs font-extrabold bg-[#FFE2E5] text-[#FA5A7D] rounded-full uppercase tracking-wider">
+                BPMN 3.0 Engine
+              </span>
+              <h2 class="text-xl md:text-2xl font-black text-[#1E293B]">
+                Quy Trình Quản Trị & Đối Soát Bán Hàng Chuỗi Điểm Bán
+              </h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Chuẩn hóa dữ liệu thô, loại trừ sai lệch đếm trùng, bóc tách tăng trưởng ảo và ra quyết định hỗ trợ</p>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center gap-2">
+            <button id="btn-quick-dispatch" class="btn-dabang-primary px-4 py-2 text-xs flex items-center gap-2">
+              <i class="fa-solid fa-signature"></i> Ký Ban Hành Lệnh Hỗ Trợ
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Phase Stepper Tabs -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          <!-- Tab 1 -->
+          <button id="tab-phase1" class="phase-tab active text-left p-4 flex items-start gap-3.5 group">
+            <div class="step-num w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-sm bg-slate-200 text-slate-600 shrink-0">1</div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] uppercase font-bold text-[#FF5B8E] tracking-wider">Giai đoạn 1</span>
+                <span id="badge-phase1" class="text-[10px] bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded-md">Chờ nạp tệp</span>
+              </div>
+              <h3 class="text-sm font-bold text-slate-900 mt-0.5">Chuẩn Bị & Làm Sạch</h3>
+              <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">Lọc trùng, bỏ hủy, đổi trả, đồng bộ kỳ</p>
+            </div>
+          </button>
+
+          <!-- Tab 2 -->
+          <button id="tab-phase2" class="phase-tab text-left p-4 flex items-start gap-3.5 group">
+            <div class="step-num w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-sm bg-slate-200 text-slate-600 shrink-0">2</div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] uppercase font-bold text-slate-400 tracking-wider">Giai đoạn 2</span>
+                <span id="badge-phase2" class="text-[10px] bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded-md">Chờ GĐ 1</span>
+              </div>
+              <h3 class="text-sm font-bold text-slate-900 mt-0.5">Tạo Báo Cáo Quản Trị</h3>
+              <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">Doanh thu thuần, LN gộp, 4 ngành hàng</p>
+            </div>
+          </button>
+
+          <!-- Tab 3 -->
+          <button id="tab-phase3" class="phase-tab text-left p-4 flex items-start gap-3.5 group">
+            <div class="step-num w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-sm bg-slate-200 text-slate-600 shrink-0">3</div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] uppercase font-bold text-slate-400 tracking-wider">Giai đoạn 3</span>
+                <span id="badge-phase3" class="text-[10px] bg-slate-100 text-slate-500 font-bold px-2 py-0.5 rounded-md">Chờ GĐ 2</span>
+              </div>
+              <h3 class="text-sm font-bold text-slate-900 mt-0.5">Đối Chiếu & Ra Quyết Định</h3>
+              <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">Cross-check audit, vạch trần bất thường, hỗ trợ</p>
+            </div>
+          </button>
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- PHASE 1 PANEL (BƯỚC 2 TRONG QUY TRÌNH 4 BƯỚC)  -->
+        <!-- ============================================== -->
+        <div id="panel-phase1" class="phase-panel space-y-5">
+          
+          <!-- Header Banner for Step 2 -->
+          <div class="rounded-2xl p-4 bg-gradient-to-r from-blue-50 to-pink-50 border border-[#FAD2E1] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-[#2563EB] text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
+                <i class="fa-solid fa-broom"></i>
+              </div>
+              <div>
+                <h3 class="text-sm font-black text-slate-900">BƯỚC 2: TIẾP NHẬN, LÀM SẠCH & XÁC NHẬN DỮ LIỆU SẠCH (BPMN 1.0)</h3>
+                <p class="text-xs text-slate-500">AI Agent phát hiện & xử lý 4 loại lỗi: trùng lặp, đơn hủy, đổi trả và lệch kỳ so sánh</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="badge-phase1" class="text-[10px] bg-amber-500 text-slate-950 px-2.5 py-1 rounded-full font-bold">
+                Đang xử lý làm sạch
+              </span>
+            </div>
+          </div>
+
+          <!-- File Upload Box -->
+          <div class="rounded-2xl p-5 border-2 border-dashed border-[#FAD2E1] bg-[#FFFBFD]">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-[#FFE4EC]">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-[#FFE2E5] text-[#FA5A7D] flex items-center justify-center font-bold text-lg shrink-0">
+                  <i class="fa-solid fa-file-excel"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-bold text-slate-900">Nạp Tệp Sheets / Excel / CSV Doanh Nghiệp</h3>
+                    <span id="active-source-badge" class="px-2 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-500 border border-slate-200 font-bold">Chưa nạp tệp</span>
+                  </div>
+                  <p class="text-xs text-slate-500">Kéo thả tệp gồm giao dịch, đổi trả, giá vốn, mục tiêu để AI Agent tự động làm sạch</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="btn-download-template" class="px-3 py-1.5 bg-[#FFF0F5] hover:bg-[#FFE4EC] text-[#FF5B8E] text-xs font-bold rounded-xl border border-[#FAD2E1] transition flex items-center gap-1.5 shadow-xs">
+                  <i class="fa-solid fa-file-arrow-down"></i> Tải Mẫu Excel (.xlsx)
+                </button>
+                <button id="btn-reset-sample" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl border border-slate-200 transition flex items-center gap-1.5">
+                  <i class="fa-solid fa-rotate-left"></i> Dữ Liệu Mẫu
+                </button>
+                <button id="btn-clear-data" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold rounded-xl border border-rose-200 transition flex items-center gap-1.5 shadow-xs">
+                  <i class="fa-solid fa-trash-can"></i> Làm Trống Dữ Liệu
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-3">
+              <!-- Drag & Drop Zone -->
+              <label for="file-sheets-input" id="drop-zone" class="bg-white hover:bg-[#FFF0F5]/70 border-2 border-dashed border-[#FAD2E1] hover:border-[#FF5B8E] rounded-2xl p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 group relative min-h-[115px] select-none">
+                <div class="flex flex-col items-center pointer-events-none z-10">
+                  <i id="drop-zone-icon" class="fa-solid fa-cloud-arrow-up text-3xl text-[#FF5B8E] group-hover:scale-110 transition duration-200 mb-1.5"></i>
+                  <div id="drop-zone-title" class="text-xs font-bold text-slate-800">
+                    Kéo & thả tệp Excel (.xlsx, .xls) hoặc CSV vào đây hoặc <span class="text-[#FF5B8E] underline font-extrabold">bấm để chọn từ máy</span>
+                  </div>
+                  <div id="drop-zone-desc" class="text-[11px] text-slate-400 mt-1">
+                    AI Agent sẽ tự động tiếp nhận, quét cấu trúc cột và khởi chạy làm sạch ngay lập tức
+                  </div>
+                </div>
+              </label>
+
+              <!-- Google Sheets URL -->
+              <div class="bg-white border border-[#FAD2E1] rounded-2xl p-4 flex flex-col justify-between space-y-2">
+                <div class="flex items-center gap-2 text-xs font-bold text-slate-800">
+                  <i class="fa-brands fa-google-drive text-emerald-600"></i>
+                  <span>Hoặc kết nối Google Sheets trực tuyến qua Link / API:</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input type="text" id="input-gsheet-url" placeholder="https://docs.google.com/spreadsheets/d/..." class="flex-1 bg-[#FFFBFD] border border-[#FAD2E1] rounded-xl px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#FF5B8E]">
+                  <button id="btn-sync-gsheet" class="btn-dabang-primary px-3.5 py-2 text-xs font-bold flex items-center gap-1.5 shrink-0">
+                    <i class="fa-solid fa-link"></i> Đồng Bộ API
+                  </button>
+                </div>
+                <div class="text-[11px] text-slate-400">Tự động nhận diện 4 sheet: Transactions, Returns, Products, Targets</div>
+              </div>
+            </div>
+
+            <!-- Upload Status Banner -->
+            <div id="upload-status-banner" class="hidden mt-3 bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+                <div>
+                  <span class="font-bold text-emerald-950" id="upload-filename">tep_du_lieu.xlsx</span>
+                  <span class="text-slate-400 mx-1.5">•</span>
+                  <span class="text-emerald-700 font-medium" id="upload-details">Đã nạp thành công</span>
+                </div>
+              </div>
+              <button id="btn-re-clean" class="btn-dabang-primary px-3 py-1 text-xs">
+                Chạy Làm Sạch Tệp Này
+              </button>
+            </div>
+          </div>
+
+          <!-- Total Raw Rows Metric Banner -->
+          <div class="p-3 bg-[#FFF5F8] border border-[#FAD2E1] rounded-2xl flex items-center justify-between text-xs">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-xl bg-white text-[#FF5B8E] flex items-center justify-center font-bold shadow-xs">
+                <i class="fa-solid fa-database"></i>
+              </div>
+              <div>
+                <span class="text-slate-500 font-medium">Tổng số dòng dữ liệu thô:</span>
+                <span id="stat-total-raw-rows" class="font-black text-slate-900 text-sm ml-1">0 dòng</span>
+              </div>
+            </div>
+            <div id="stat-total-raw-desc" class="text-xs text-slate-400 font-medium">Chưa có tệp nạp</div>
+          </div>
+
+          <!-- AI Cleaning Engine Logs Console -->
+          <div class="rounded-2xl p-4 bg-white border border-[#FAD2E1] space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-terminal text-[#FF5B8E]"></i> AI Agent Data Cleaning Engine Logs
+              </h3>
+              <div class="flex items-center gap-2">
+                <button id="btn-open-revision-modal" class="px-3.5 py-2 bg-[#FFF0F5] hover:bg-[#FFE4EC] text-[#FF5B8E] text-xs font-bold rounded-xl border border-[#FAD2E1] transition flex items-center gap-1.5 shadow-xs">
+                  <i class="fa-solid fa-sliders"></i> Yêu Cầu Chỉnh Sửa Quy Tắc
+                </button>
+                <button id="btn-run-cleaning" class="btn-dabang-primary px-4 py-2 text-xs flex items-center gap-2">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> AI Agent: Tải & Làm Sạch Dữ Liệu
+                </button>
+              </div>
+            </div>
+
+            <!-- Terminal Box -->
+            <div class="bg-slate-900 rounded-xl p-3 font-mono text-xs text-slate-300 shadow-inner">
+              <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                  <span class="text-slate-400 text-[10px] ml-2">bpmn-cleaning-engine.log</span>
+                </div>
+                <span id="cleaning-status-badge" class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400 font-bold">Chờ nạp tệp</span>
+              </div>
+              <div id="cleaning-log-output" class="h-28 overflow-y-auto space-y-1 scrollbar-thin">
+                <div class="text-slate-500">[INFO] Hệ thống AI Agent BPMN 3.0 sẵn sàng tiếp nhận dữ liệu doanh nghiệp.</div>
+                <div class="text-slate-500">[INFO] Vui lòng kéo & thả tệp Excel (.xlsx, .xls) hoặc CSV để AI Agent phân tích và làm sạch.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Raw Sample Table -->
+          <div class="rounded-2xl border border-[#FAD2E1] bg-white overflow-hidden shadow-xs">
+            <div class="p-4 border-b border-[#FFE4EC] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FFFBFD]">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <i class="fa-solid fa-table-list text-[#FF5B8E]"></i> Bảng Đối Soát Mẫu Dữ Liệu
+                </h3>
+                <p class="text-xs text-slate-500">Nhân viên kinh doanh có thể kiểm tra từng lỗi phát hiện được gán nhãn tự động bởi Agent</p>
+              </div>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="text-slate-500 font-medium">Lọc theo loại:</span>
+                <select id="filter-data-type" class="bg-white border border-[#FAD2E1] rounded-xl px-3 py-1.5 text-slate-700 font-medium text-xs focus:outline-none focus:border-[#FF5B8E]">
+                  <option value="all">Tất cả mẫu dữ liệu</option>
+                  <option value="duplicate">Đơn trùng lặp</option>
+                  <option value="cancelled">Đơn đã hủy</option>
+                  <option value="return">Đơn đổi trả hàng</option>
+                  <option value="period">Lệch kỳ so sánh</option>
+                  <option value="valid">Đơn hợp lệ sạch</option>
+                </select>
+              </div>
+            </div>
+            <div class="overflow-x-auto max-h-64">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-[#FFF5F8] text-slate-600 uppercase text-[10px] font-bold sticky top-0 border-b border-[#FFE4EC]">
+                  <tr>
+                    <th class="p-3">Mã Giao Dịch</th>
+                    <th class="p-3">Thời Gian</th>
+                    <th class="p-3">Cửa Hàng</th>
+                    <th class="p-3">Sản Phẩm / Tên</th>
+                    <th class="p-3">Ngành Hàng</th>
+                    <th class="p-3 text-right">Doanh Thu Thô</th>
+                    <th class="p-3 text-right">Giá Vốn</th>
+                    <th class="p-3">Trạng Thái</th>
+                    <th class="p-3">Ghi Nhận Agent</th>
+                  </tr>
+                </thead>
+                <tbody id="raw-sample-tbody" class="divide-y divide-slate-100 text-slate-700">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Human Verification Gate -->
+          <div id="human-verification-box" class="rounded-2xl p-5 bg-gradient-to-r from-[#FFF0F5] via-white to-[#F0FDF4] border-2 border-[#FAD2E1] shadow-xs">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-[#FF5B8E]"></span>
+                  <h3 class="text-base font-bold text-slate-900">Xác Thực Con Người (Human Verification Gate)</h3>
+                  <span class="text-xs bg-amber-100 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-full font-bold">Chốt Dữ Liệu Sạch</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  Sau khi AI Agent xuất "Sheets dữ liệu đã làm sạch", Chuyên viên Báo cáo tiến hành kiểm tra lại đối chiếu trước khi cho phép Agent tính toán báo cáo quản trị.
+                </p>
+              </div>
+              <div class="flex items-center gap-3 shrink-0">
+                <button id="btn-human-reject" class="px-4 py-2 bg-white hover:bg-[#FFF0F5] text-[#FF5B8E] text-xs font-bold rounded-xl transition border border-[#FAD2E1] hover:border-[#FF5B8E] flex items-center gap-1.5 shadow-xs">
+                  <i class="fa-solid fa-sliders"></i> Yêu Cầu Chỉnh Sửa
+                </button>
+                <button id="btn-human-approve" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+                  <i class="fa-solid fa-circle-check"></i> Xác Nhận Dữ Liệu OK (Chuyển GĐ 2)
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- PHASE 2 PANEL: BÁO CÁO QUẢN TRỊ               -->
+        <!-- ============================================== -->
+        <div id="panel-phase2" class="phase-panel hidden space-y-6">
+          <div class="rounded-2xl p-5 bg-[#FFF0F5] border border-[#FAD2E1] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 bg-[#FFD1DF] text-[#FF5B8E] text-[11px] font-extrabold rounded-md uppercase">Bước 2/3 BPMN</span>
+                <h2 class="text-base font-bold text-slate-900">Tính Toán & Tạo Báo Cáo Quản Trị Hệ Thống</h2>
+              </div>
+              <p class="text-xs text-slate-600">
+                Tính Doanh thu thuần, Giá vốn chuẩn (COGS), Lợi nhuận gộp, % Hoàn thành mục tiêu, Cơ cấu 4 ngành hàng và Đổi trả.
+              </p>
+            </div>
+            <button id="btn-generate-report" class="btn-dabang-primary px-5 py-2.5 text-xs flex items-center gap-2 shrink-0">
+              <i class="fa-solid fa-calculator"></i> AI Agent: Tính Toán Báo Cáo
+            </button>
+          </div>
+
+          <!-- 4 Macro KPI Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="rounded-2xl p-4 bg-[#FFF5F8] border border-[#FAD2E1]">
+              <div class="flex items-center justify-between text-xs font-bold text-blue-700">
+                <span>Doanh Thu Thuần</span>
+                <i class="fa-solid fa-coins text-blue-400"></i>
+              </div>
+              <div class="text-3xl font-black text-slate-900 mt-2" id="kpi-macro-rev">0 <span class="text-sm font-semibold text-blue-600">VNĐ</span></div>
+              <div class="flex items-center justify-between text-xs mt-3 pt-3 border-t border-[#FFE4EC]">
+                <span class="text-slate-500" id="kpi-macro-rev-target-lbl">Mục tiêu: 0 VNĐ</span>
+                <span class="text-slate-500 font-bold bg-slate-100 px-2 py-0.5 rounded" id="kpi-macro-rev-target">0%</span>
+              </div>
+            </div>
+
+            <div class="rounded-2xl p-4 bg-[#F0FDF4] border border-emerald-200">
+              <div class="flex items-center justify-between text-xs font-bold text-emerald-700">
+                <span>Lợi Nhuận Gộp</span>
+                <i class="fa-solid fa-sack-dollar text-emerald-500"></i>
+              </div>
+              <div class="text-3xl font-black text-slate-900 mt-2" id="kpi-macro-profit">0 <span class="text-sm font-semibold text-emerald-600">VNĐ</span></div>
+              <div class="flex items-center justify-between text-xs mt-3 pt-3 border-t border-emerald-100">
+                <span class="text-slate-500" id="kpi-macro-profit-target-lbl">Mục tiêu: 0 VNĐ</span>
+                <span class="text-slate-500 font-bold bg-slate-100 px-2 py-0.5 rounded" id="kpi-macro-profit-target">0%</span>
+              </div>
+            </div>
+
+            <div class="rounded-2xl p-4 bg-[#FAF5FF] border border-purple-200">
+              <div class="flex items-center justify-between text-xs font-bold text-purple-700">
+                <span>Biên LN Gộp Bình Quân</span>
+                <i class="fa-solid fa-percent text-purple-400"></i>
+              </div>
+              <div class="text-3xl font-black text-slate-900 mt-2" id="kpi-macro-margin">0.0%</div>
+              <div class="flex items-center justify-between text-xs mt-3 pt-3 border-t border-purple-100">
+                <span class="text-slate-500">Chuẩn: 32.0%</span>
+                <span class="text-slate-400 font-medium" id="kpi-macro-margin-sub">Chờ tính toán</span>
+              </div>
+            </div>
+
+            <div class="rounded-2xl p-4 bg-[#FFF0F5] border border-[#FAD2E1]">
+              <div class="flex items-center justify-between text-xs font-bold text-[#FF5B8E]">
+                <span>Tỷ Lệ Đổi Trả Bình Quân</span>
+                <i class="fa-solid fa-arrow-rotate-left text-pink-400"></i>
+              </div>
+              <div class="text-3xl font-black text-slate-900 mt-2" id="kpi-macro-return">0.0%</div>
+              <div class="flex items-center justify-between text-xs mt-3 pt-3 border-t border-[#FFE4EC]">
+                <span class="text-slate-500">Định mức: 3.5%</span>
+                <span class="text-slate-400 font-medium" id="kpi-macro-return-sub">Chờ tính toán</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div class="lg:col-span-2 rounded-2xl p-5 border border-[#FAD2E1] bg-white">
+              <h3 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-chart-bar text-[#FF5B8E]"></i> Doanh Thu Thực Tế vs Mục Tiêu (Theo Cửa Hàng)
+              </h3>
+              <div class="h-64">
+                <canvas id="chart-stores-revenue"></canvas>
+              </div>
+            </div>
+
+            <div class="rounded-2xl p-5 border border-[#FAD2E1] bg-white">
+              <h3 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie text-purple-600"></i> Cơ Cấu 4 Ngành Hàng
+              </h3>
+              <div class="h-64 flex items-center justify-center">
+                <canvas id="chart-product-mix"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- 18 Stores Management Table -->
+          <div class="rounded-2xl border border-[#FAD2E1] bg-white overflow-hidden shadow-xs">
+            <div class="p-4 border-b border-[#FFE4EC] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FFFBFD]">
+              <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-store text-emerald-600"></i> Bảng Tổng Hợp Chỉ Số Các Cửa Hàng
+              </h3>
+              <div class="flex items-center gap-2 text-xs">
+                <input type="text" id="search-store-input" placeholder="Tìm tên cửa hàng, mã..." class="bg-white border border-[#FAD2E1] rounded-xl px-3 py-1.5 text-slate-800 text-xs w-48 focus:outline-none focus:border-[#FF5B8E]">
+                <select id="filter-region" class="bg-white border border-[#FAD2E1] rounded-xl px-3 py-1.5 text-slate-700 text-xs focus:outline-none focus:border-[#FF5B8E]">
+                  <option value="all">Tất cả khu vực</option>
+                  <option value="Hà Nội">Hà Nội</option>
+                  <option value="TP.HCM">TP.HCM</option>
+                  <option value="Miền Bắc">Miền Bắc khác</option>
+                  <option value="Miền Trung">Miền Trung</option>
+                  <option value="Miền Tây">Miền Tây / Nam Bộ</option>
+                </select>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-[#FFF5F8] text-slate-600 uppercase text-[10px] font-bold sticky top-0 border-b border-[#FFE4EC]">
+                  <tr>
+                    <th class="p-3">Cửa Hàng</th>
+                    <th class="p-3">Khu Vực</th>
+                    <th class="p-3 text-right">Doanh Thu Thuần</th>
+                    <th class="p-3 text-right">Mục Tiêu</th>
+                    <th class="p-3 text-right">% Đạt</th>
+                    <th class="p-3 text-right">LN Gộp</th>
+                    <th class="p-3 text-right">Biên (%)</th>
+                    <th class="p-3 text-right">Đổi Trả</th>
+                    <th class="p-3 text-center">Tăng Trưởng</th>
+                    <th class="p-3 text-center">Trạng Thái</th>
+                  </tr>
+                </thead>
+                <tbody id="stores-report-tbody" class="divide-y divide-slate-100 text-slate-700">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <button id="btn-proceed-phase3" class="btn-dabang-primary px-6 py-3 text-xs flex items-center gap-2">
+              <span>Chuyển Sang Giai Đoạn 3: Đối Chiếu & Ra Quyết Định</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+
+        <!-- ============================================== -->
+        <!-- PHASE 3 PANEL: ĐỐI CHIẾU & RA QUYẾT ĐỊNH       -->
+        <!-- ============================================== -->
+        <div id="panel-phase3" class="phase-panel hidden space-y-6">
+          <div class="rounded-2xl p-5 bg-[#FFF0F5] border border-[#FAD2E1] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 bg-[#FFD1DF] text-[#FF5B8E] text-[11px] font-extrabold rounded-md uppercase">Bước 3/3 BPMN</span>
+                <h2 class="text-base font-bold text-slate-900">Kiểm Tra Đối Chiếu & Phát Hiện Bất Thường (Cross-check Audit)</h2>
+              </div>
+              <p class="text-xs text-slate-600">
+                Đối soát 2 chiều giữa "Sheets Sạch" + "Báo Cáo Quản Trị", bóc tách tăng trưởng ảo, bẫy biên lợi nhuận mỏng và xếp hạng ưu tiên hỗ trợ.
+              </p>
+            </div>
+            <button id="btn-run-audit" class="btn-dabang-primary px-5 py-2.5 text-xs flex items-center gap-2 shrink-0">
+              <i class="fa-solid fa-shield-halved"></i> AI Agent: Chạy Cross-check Audit
+            </button>
+          </div>
+
+          <!-- 4 Anomaly Store Cards -->
+          <div id="anomaly-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="col-span-1 md:col-span-2 p-8 text-center bg-white border border-[#FAD2E1] rounded-2xl">
+              <div class="w-12 h-12 rounded-2xl bg-[#FFE2E5] text-[#FA5A7D] flex items-center justify-center mx-auto mb-3 text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+              <h4 class="text-sm font-bold text-slate-800 mb-1">Chưa có phát hiện bất thường</h4>
+              <p class="text-xs text-slate-500">Hệ thống sẽ tự động quét, chẩn đoán nguyên nhân sụt giảm biên lợi nhuận, bẫy doanh thu và tỷ lệ đổi trả sau khi hoàn tất đối soát ở Giai đoạn 2.</p>
+            </div>
+          </div>
+
+          <!-- Priority Matrix for Sales Director -->
+          <div class="rounded-2xl border border-[#FAD2E1] bg-white overflow-hidden shadow-xs">
+            <div class="p-4 border-b border-[#FFE4EC] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FFFBFD]">
+              <div>
+                <span class="px-2.5 py-0.5 bg-[#FFE2E5] text-[#FA5A7D] border border-[#FAD2E1] rounded-full text-[11px] font-bold uppercase">Phần Dành Cho Quản Lý</span>
+                <h3 class="text-sm font-bold text-slate-900 mt-0.5">Bảng Xếp Hạng Ưu Tiên Hỗ Trợ Cửa Hàng</h3>
+              </div>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="text-slate-500 font-medium">Lọc mức độ:</span>
+                <select id="filter-priority" class="bg-white border border-[#FAD2E1] rounded-xl px-3 py-1.5 text-slate-700 text-xs font-semibold focus:outline-none focus:border-[#FF5B8E]">
+                  <option value="all">Tất cả cửa hàng</option>
+                  <option value="1">🔴 Ưu tiên 1 - Cấp thiết can thiệp</option>
+                  <option value="2">🟠 Ưu tiên 2 - Cần theo dõi</option>
+                  <option value="3">🟡 Ưu tiên 3 - Duy trì ổn định</option>
+                  <option value="4">🟢 Ưu tiên 4 - Xuất sắc</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-[#FFF5F8] text-slate-600 uppercase text-[10px] font-bold sticky top-0 border-b border-[#FFE4EC]">
+                  <tr>
+                    <th class="p-3">Mức Ưu Tiên</th>
+                    <th class="p-3">Cửa Hàng / Quản Lý</th>
+                    <th class="p-3 text-right">Doanh Thu Thuần</th>
+                    <th class="p-3 text-right">% Đạt Target</th>
+                    <th class="p-3 text-right">Biên LN Gộp</th>
+                    <th class="p-3 text-right">Tỷ Lệ Đổi Trả</th>
+                    <th class="p-3">Chẩn Đoán Bất Thường</th>
+                    <th class="p-3">Khuyến Nghị Giám Đốc</th>
+                    <th class="p-3 text-center">Hành Động</th>
+                  </tr>
+                </thead>
+                <tbody id="priority-matrix-tbody" class="divide-y divide-slate-100 text-slate-700">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- AI Copilot Chat Box (Blossom Theme) -->
+        <section class="rounded-2xl p-5 border border-[#FAD2E1] bg-white space-y-3 shadow-xs">
+          <div class="flex items-center justify-between pb-3 border-b border-[#FFE4EC]">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-2xl bg-[#FFE2E5] text-[#FA5A7D] flex items-center justify-center font-bold text-base">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Trợ Lý AI Agent Trò Chuyện & Tư Vấn Bán Lẻ Phúc An</h3>
+                <p class="text-xs text-slate-500">Giám đốc Kinh doanh có thể đặt câu hỏi trực tiếp để phân tích sâu từng cửa hàng</p>
+              </div>
+            </div>
+            <span class="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full flex items-center gap-1.5 font-bold">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> AI Engine Online
+            </span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs text-slate-400 font-medium">Gợi ý câu hỏi:</span>
+            <button class="quick-prompt-btn px-2.5 py-1 bg-[#FFF0F5] hover:bg-[#FFE4EC] border border-[#FAD2E1] rounded-full text-xs text-[#FF5B8E] font-semibold transition" data-question="Hướng dẫn quy trình làm sạch dữ liệu theo chuẩn BPMN 3.0?">
+              📋 Quy trình làm sạch BPMN 3.0
+            </button>
+            <button class="quick-prompt-btn px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-full text-xs text-amber-800 font-semibold transition" data-question="Các tiêu chí phát hiện bẫy doanh thu và sụt giảm biên lợi nhuận?">
+              ⚠️ Tiêu chí phát hiện bẫy doanh thu
+            </button>
+            <button class="quick-prompt-btn px-2.5 py-1 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-full text-xs text-purple-700 font-semibold transition" data-question="Cách nhận diện và chuẩn hóa lệch kỳ kinh doanh?">
+              ⏱️ Cách đối soát lệch kỳ so sánh
+            </button>
+            <button class="quick-prompt-btn px-2.5 py-1 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-full text-xs text-rose-700 font-semibold transition" data-question="Tiêu chuẩn phân loại thứ tự ưu tiên can thiệp cửa hàng?">
+              🚨 Tiêu chuẩn phân loại ưu tiên
+            </button>
+          </div>
+
+          <div id="chat-messages-container" class="h-56 overflow-y-auto space-y-3 p-3 bg-[#FFFBFD] border border-[#FFE4EC] rounded-2xl text-xs scrollbar-thin">
+            <div class="flex items-start gap-2.5">
+              <div class="w-7 h-7 rounded-xl bg-[#FFE2E5] text-[#FA5A7D] flex items-center justify-center shrink-0 text-xs">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div class="bg-white border border-[#FFE4EC] text-slate-800 p-3.5 rounded-2xl max-w-2xl leading-relaxed shadow-xs">
+                Xin chào Quý khách hàng & Ban Lãnh đạo! Tôi là <strong>AI Agent Quản Trị & Đối Soát Bán Hàng</strong>.<br>
+                Hệ thống đang ở trạng thái <strong>dữ liệu trống (sẵn sàng tiếp nhận)</strong>. Vui lòng nạp tệp Excel/CSV giao dịch của doanh nghiệp bạn hoặc nhấn <em>"Dữ Liệu Mẫu"</em> để bắt đầu quá trình làm sạch tự động và phân tích chuyên sâu.
+              </div>
+            </div>
+          </div>
+
+          <form id="ai-chat-form" class="flex items-center gap-2">
+            <input type="text" id="ai-chat-input" placeholder="Nhập câu hỏi cho AI Agent (ví dụ: Quy trình làm sạch dữ liệu, phân tích doanh thu, tỷ lệ đổi trả...)" class="flex-1 bg-[#FFFBFD] border border-[#FAD2E1] rounded-xl px-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#FF5B8E]">
+            <button type="submit" class="btn-dabang-primary px-5 py-2.5 text-xs flex items-center gap-1.5 shadow-xs">
+              <span>Gửi</span>
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </form>
+        </section>
+
+      </section>
+
+      </div><!-- End of subsequent-steps-container -->
+
+    </main>
+
+  </div>
+
+  <!-- Modal Ký Duyệt Quyết Định Hỗ Trợ Cửa Hàng -->
+  <div id="decision-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white border border-[#FAD2E1] rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-[#FFE4EC]">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-xl bg-[#FFE2E5] text-[#FA5A7D] flex items-center justify-center font-bold">
+            <i class="fa-solid fa-file-signature"></i>
+          </span>
+          <h3 class="text-base font-extrabold text-slate-900">Lệnh Can Thiệp & Hỗ Trợ Cửa Hàng</h3>
+        </div>
+        <button id="btn-close-modal" class="text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-700">
+        <div class="bg-[#FFF5F8] p-3 rounded-2xl border border-[#FAD2E1]">
+          <div class="text-slate-500">Cửa hàng tiếp nhận:</div>
+          <div id="modal-store-name" class="text-base font-extrabold text-[#FF5B8E] mt-0.5">--</div>
+          <div id="modal-store-manager" class="text-xs text-slate-600 font-semibold mt-0.5">Quản lý: -- | Khu vực: --</div>
+        </div>
+
+        <div>
+          <label class="block text-slate-600 mb-1 font-semibold">Chẩn đoán vấn đề của AI Agent:</label>
+          <div id="modal-diagnosis" class="bg-[#FFFBFD] p-2.5 rounded-xl border border-[#FAD2E1] text-slate-800">...</div>
+        </div>
+
+        <div>
+          <label class="block text-slate-600 mb-1 font-semibold">Phương án hành động được duyệt:</label>
+          <textarea id="modal-action-plan" rows="3" class="w-full bg-[#FFFBFD] border border-[#FAD2E1] rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#FF5B8E]"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-600 mb-1 font-semibold">Chuyên viên phụ trách:</label>
+            <input type="text" id="modal-assignee" value="Nguyễn Văn An (Chuyên viên Vận hành Bán lẻ)" class="w-full bg-[#FFFBFD] border border-[#FAD2E1] rounded-xl p-2 text-xs text-slate-800">
+          </div>
+          <div>
+            <label class="block text-slate-600 mb-1 font-semibold">Thời hạn hoàn thành:</label>
+            <input type="text" id="modal-deadline" value="3 ngày (Hạn chót: 15/11/2026)" class="w-full bg-[#FFFBFD] border border-[#FAD2E1] rounded-xl p-2 text-xs text-slate-800">
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-[#FFE4EC] flex items-center justify-end gap-3">
+        <button id="btn-cancel-modal" class="px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl text-xs font-semibold">Hủy</button>
+        <button id="btn-confirm-decision" class="btn-dabang-primary px-5 py-2.5 text-xs flex items-center gap-1.5 shadow-md">
+          <i class="fa-solid fa-check-double"></i> Ký Duyệt & Ban Hành Lệnh Hỗ Trợ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Yêu Cầu Chỉnh Sửa Quy Tắc Cho AI Agent -->
+  <div id="revision-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white border border-[#FAD2E1] rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-[#FFE4EC]">
+        <div class="flex items-center gap-2.5">
+          <span class="w-9 h-9 rounded-2xl bg-[#FFE2E5] text-[#FA5A7D] flex items-center justify-center font-bold text-base">
+            <i class="fa-solid fa-sliders"></i>
+          </span>
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900">Yêu Cầu Chỉnh Sửa Quy Tắc AI Agent</h3>
+            <p class="text-[11px] text-slate-500 font-medium">Truyền chỉ đạo và quy tắc tùy biến để AI Agent thực thi làm sạch lại</p>
+          </div>
+        </div>
+        <button id="btn-close-revision-modal" class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600 text-lg transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs text-slate-700">
+        <div>
+          <label class="block text-slate-600 font-bold mb-1.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-bolt text-amber-500"></i> Gợi ý yêu cầu nhanh (Click để thêm vào yêu cầu):
+          </label>
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" class="preset-rule-btn px-2.5 py-1 rounded-lg bg-[#FFF0F5] hover:bg-[#FFE4EC] text-[#FF5B8E] border border-[#FAD2E1] text-[11px] font-semibold transition" data-rule="Loại trừ toàn bộ đơn đổi trả phát sinh sau 30 ngày kể từ ngày xuất hóa đơn">
+              + Đổi trả > 30 ngày
+            </button>
+            <button type="button" class="preset-rule-btn px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-[11px] font-semibold transition" data-rule="Đồng bộ cứng kỳ so sánh về 30 ngày chuẩn cho tất cả điểm bán">
+              + Đồng bộ kỳ 30 ngày chuẩn
+            </button>
+            <button type="button" class="preset-rule-btn px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[11px] font-semibold transition" data-rule="Siết chặt cửa sổ thời gian lọc trùng POS xuống dưới 3 phút">
+              + Siết trùng POS (&lt; 3 phút)
+            </button>
+            <button type="button" class="preset-rule-btn px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] font-semibold transition" data-rule="Bóc tách riêng chi phí hoàn trả và bảo hành kỹ thuật sản phẩm">
+              + Bóc tách bảo hành kỹ thuật
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label for="revision-prompt-input" class="block text-slate-800 font-bold mb-1">
+            Chỉ đạo cụ thể cho AI Agent (Prompt / Yêu cầu chỉnh sửa):
+          </label>
+          <textarea id="revision-prompt-input" rows="4" placeholder="Nhập chi tiết yêu cầu của bạn để AI Agent làm theo..." class="w-full bg-[#FFFBFD] border border-[#FAD2E1] rounded-2xl p-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#FF5B8E] focus:ring-2 focus:ring-[#FAD2E1] transition"></textarea>
+        </div>
+
+        <div class="bg-[#FFF5F8] p-3 rounded-2xl border border-[#FAD2E1] space-y-2">
+          <div class="font-bold text-[11px] text-slate-800">Quy tắc áp dụng khi thực thi:</div>
+          <label class="flex items-center gap-2 cursor-pointer text-[11px] text-slate-700">
+            <input type="checkbox" id="chk-auto-reclean" checked class="accent-[#FF5B8E] w-3.5 h-3.5 rounded">
+            <span>Tự động quét và làm sạch lại dữ liệu theo yêu cầu mới</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-[11px] text-slate-700">
+            <input type="checkbox" id="chk-log-revision" checked class="accent-[#FF5B8E] w-3.5 h-3.5 rounded">
+            <span>Ghi nhận vết can thiệp của Chuyên viên vào Agent Cleaning Engine Logs</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-[11px] text-slate-700">
+            <input type="checkbox" id="chk-recalc-kpis" checked class="accent-[#FF5B8E] w-3.5 h-3.5 rounded">
+            <span>Tự động tính toán lại Doanh thu & Lợi nhuận gộp sau khi làm sạch</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-[#FFE4EC] flex items-center justify-end gap-3">
+        <button id="btn-cancel-revision" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition">
+          Hủy bỏ
+        </button>
+        <button id="btn-submit-revision" class="btn-dabang-primary px-5 py-2.5 text-xs font-bold flex items-center gap-2 shadow-md hover:scale-[1.02] active:scale-[0.98] transition">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Submit & Ra Lệnh Cho Agent Thực Thi</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-notification" class="fixed bottom-5 right-5 bg-gradient-to-r from-[#FF5B8E] to-[#FA709A] text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+    <i class="fa-solid fa-circle-check text-base"></i>
+    <span id="toast-text">Thông báo</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

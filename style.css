@@ -1,0 +1,286 @@
+/* Dabang Inspired Aesthetic Dashboard Theme for Phuc An Retail */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root {
+  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-rounded: 'Nunito', sans-serif;
+  
+  /* Dabang Color Palette */
+  --dabang-bg: #FCEEF3;
+  --dabang-card: #FFFFFF;
+  --dabang-primary: #FF5B8E;
+  --dabang-primary-hover: #FA4379;
+  --dabang-border: #FAD2E1;
+  --dabang-text-dark: #1E293B;
+  --dabang-text-muted: #737791;
+  --dabang-text-subtle: #94A3B8;
+
+  /* Mini-Card Pastel Colors */
+  --card-pink-bg: #FFE2E5;
+  --card-pink-accent: #FA5A7D;
+  --card-orange-bg: #FFF4DE;
+  --card-orange-accent: #FF947A;
+  --card-green-bg: #DCFCE7;
+  --card-green-accent: #3CD856;
+  --card-purple-bg: #F3E8FF;
+  --card-purple-accent: #BF83FF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--dabang-bg);
+  color: var(--dabang-text-dark);
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Rounded Cards */
+.dabang-card {
+  background: var(--dabang-card);
+  border-radius: 1.5rem; /* 24px */
+  border: 1px solid rgba(250, 210, 225, 0.6);
+  box-shadow: 0 10px 30px -5px rgba(255, 91, 142, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dabang-card:hover {
+  box-shadow: 0 14px 35px -5px rgba(255, 91, 142, 0.12);
+}
+
+/* Nav Link Styling */
+.dabang-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 1rem;
+  color: var(--dabang-text-muted);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.dabang-nav-item:hover {
+  color: var(--dabang-primary);
+  background: rgba(255, 91, 142, 0.08);
+}
+
+.dabang-nav-item.active {
+  background: var(--dabang-primary);
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 20px -3px rgba(255, 91, 142, 0.35);
+}
+
+.dabang-nav-item.active i {
+  color: #FFFFFF !important;
+}
+
+/* Custom Scrollbars in Soft Pink */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FFF0F5;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #FFB3C7;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FF8DAA;
+}
+
+/* Primary Pink Action Buttons */
+.btn-dabang-primary {
+  background: linear-gradient(135deg, #FF5B8E 0%, #FA527F 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 0.875rem;
+  box-shadow: 0 4px 14px rgba(255, 91, 142, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+}
+
+.btn-dabang-primary:hover {
+  background: linear-gradient(135deg, #FA4379 0%, #FF5B8E 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255, 91, 142, 0.4);
+}
+
+.btn-dabang-primary:active {
+  transform: scale(0.98);
+}
+
+/* Phase Tab active states */
+.phase-tab {
+  background: #FFFFFF;
+  border: 1.5px solid #FFE4EC;
+  border-radius: 1.25rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.phase-tab:hover {
+  border-color: #FFB3C7;
+  transform: translateY(-1px);
+}
+
+.phase-tab.active {
+  background: #FFF0F5 !important;
+  border-color: #FF5B8E !important;
+  box-shadow: 0 8px 20px -3px rgba(255, 91, 142, 0.2);
+}
+
+.phase-tab.active .step-num {
+  background: linear-gradient(135deg, #FF5B8E 0%, #FF80AB 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 10px rgba(255, 91, 142, 0.3);
+}
+
+.phase-tab.completed {
+  background: #F0FDF4 !important;
+  border-color: #86EFAC !important;
+}
+
+.phase-tab.completed .step-num {
+  background: #10B981 !important;
+  color: #FFFFFF !important;
+}
+
+/* Animations */
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.03); }
+}
+
+.animate-subtle {
+  animation: pulseSubtle 3s infinite ease-in-out;
+}
+
+/* ============================================== */
+/* DARK MODE (Dabang Cyber Rose Luxury Theme)     */
+/* ============================================== */
+body.dark-mode {
+  --dabang-bg: #120A13;
+  --dabang-card: #1C111E;
+  --dabang-border: #382038;
+  --dabang-text-dark: #F8FAFC;
+  --dabang-text-muted: #CBD5E1;
+  --dabang-text-subtle: #94A3B8;
+  background-color: #120A13 !important;
+  color: #F8FAFC !important;
+}
+
+body.dark-mode aside {
+  background-color: #180E1A !important;
+  border-color: #382038 !important;
+}
+
+body.dark-mode header {
+  background-color: rgba(18, 10, 19, 0.92) !important;
+}
+
+body.dark-mode .dabang-card {
+  background-color: #1C111E !important;
+  border-color: #382038 !important;
+  color: #F8FAFC !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .bg-white {
+  background-color: #1C111E !important;
+}
+
+body.dark-mode .border-\[\#FAD2E1\],
+body.dark-mode .border-\[\#FFE4EC\],
+body.dark-mode .border-\[\#FDF0F4\] {
+  border-color: #382038 !important;
+}
+
+body.dark-mode .text-\[\#1E293B\],
+body.dark-mode .text-slate-900,
+body.dark-mode .text-slate-800 {
+  color: #F8FAFC !important;
+}
+
+body.dark-mode .text-slate-700,
+body.dark-mode .text-slate-600,
+body.dark-mode .text-slate-500 {
+  color: #CBD5E1 !important;
+}
+
+body.dark-mode .text-slate-400 {
+  color: #94A3B8 !important;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background-color: #241628 !important;
+  border-color: #382038 !important;
+  color: #F8FAFC !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #64748B !important;
+}
+
+body.dark-mode .bg-\[\#FFFBFD\],
+body.dark-mode .bg-\[\#FFF5F8\],
+body.dark-mode .bg-\[\#FFF0F5\] {
+  background-color: #241628 !important;
+}
+
+body.dark-mode .bg-slate-50,
+body.dark-mode .bg-slate-100 {
+  background-color: #28192D !important;
+}
+
+body.dark-mode .hover\:bg-slate-50:hover,
+body.dark-mode .hover\:bg-\[\#FFF0F5\]:hover {
+  background-color: #2E1D33 !important;
+}
+
+body.dark-mode .phase-tab {
+  background-color: #1C111E !important;
+  border-color: #382038 !important;
+}
+
+body.dark-mode .phase-tab.active {
+  background: #2D1A30 !important;
+  border-color: #FF5B8E !important;
+}
+
+body.dark-mode #welcome-card {
+  background-color: #180E1A !important;
+  border-color: #382038 !important;
+  color: #F8FAFC !important;
+}
+
+body.dark-mode #welcome-modal-overlay {
+  background-color: rgba(18, 10, 19, 0.95) !important;
+}
+
+/* Dark mode pastel mini cards */
+body.dark-mode .bg-\[\#FFE2E5\] {
+  background-color: #361421 !important;
+}
+body.dark-mode .bg-\[\#FFF4DE\] {
+  background-color: #361F12 !important;
+}
+body.dark-mode .bg-\[\#DCFCE7\] {
+  background-color: #122F1E !important;
+}
+body.dark-mode .bg-\[\#F3E8FF\] {
+  background-color: #2A143D !important;
+}
